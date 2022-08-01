@@ -17,6 +17,7 @@ from .util import UrlBuilder
 from .parameters import BBBModule
 import sys
 from jxmlease import parse
+from xml.parsers import expat
 from hashlib import sha1
 if sys.version_info[0] == 2:
     from urllib2 import  urlopen ,Request
@@ -136,6 +137,8 @@ class BigBlueButton:
 
         try:
             rawXml = parse(response)["response"]
+        except expat.ExpatError as e:
+            raise BBBException("XMLSyntaxError", expat.errors.messages[e.code])
         except Exception as e:
             raise BBBException("XMLSyntaxError", e.message)
 
